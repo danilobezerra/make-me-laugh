@@ -1,0 +1,49 @@
+name: Build and Upload ROM
+
+on:
+  pull_request:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build ROM
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Main Repo
+        uses: actions/checkout@v4
+        with:
+          path: main
+
+      - name: Cache Marsdev
+        id: cache-marsdev
+        uses: actions/cache@v3
+        with:
+          path: /opt/toolchains/mars
+          key: ${{ runner.os }}-marsdev-${{ hashFiles('marsdev/Makefile') }}
+
+      - name: Checkout Marsdev Repo
+        if: steps.cache-marsdev.outputs.cache-hit != 'true'
+        uses: actions/checkout@v4
+        with:
+          repository: andwn/marsdev
+          path: marsdev
+
+      - name: Build Toolchain and SGDK
+        if: steps.cache-marsdev.outputs.cache-hit != 'true'
+        run: |
+          make m68k-toolchain-newlib sgdk
+          sudo make install
+        working-directory: marsdev
+
+      - name: Compile ROM
+        run: make
+        working-directory: main
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          path: main/out/
+          if-no-files-found: error

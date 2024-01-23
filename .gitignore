@@ -1,0 +1,6 @@
+/.idea/
+symbol.txt
+out.lst
+/out/
+*.o
+*.bin

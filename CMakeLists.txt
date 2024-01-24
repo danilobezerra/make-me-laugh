@@ -17,7 +17,10 @@ project(
 
 # finally, the examples
 add_executable(make_me_laugh WIN32 main.c)
+
 target_link_libraries(make_me_laugh PRIVATE nene)
+target_compile_options(make_me_laugh PRIVATE -fsanitize=address,undefined)
+target_link_options(make_me_laugh PRIVATE -fsanitize=address,undefined)
 
 # set the C standard properties, 
 # be sure to follow the same standard of nene (see the src/CMakeLists.txt file)

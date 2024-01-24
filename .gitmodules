@@ -1,0 +1,3 @@
+[submodule "nene"]
+	path = nene
+	url = https://codeberg.org/Nene/nene.git

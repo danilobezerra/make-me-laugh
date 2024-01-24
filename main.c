@@ -219,7 +219,16 @@ void game_Ball_update(game_Ball *const ball, game_Rope *const rope) {
 	);
 
 	if (br_intersection.count > 0) {
-		
+		if (nene_Vec2_dot(ball->velocity, nene_Vec2_perpendicular(nene_Segment_as_vec2(rope_seg))) < -0.2f) {
+			nene_Vec2 intersection_perpdir = nene_Vec2_perpendicular(nene_Vec2_normalize(nene_Segment_as_vec2(br_intersection.intersection)));
+
+			ball->velocity = nene_Vec2_negate(
+				nene_Vec2_scale(
+					intersection_perpdir,
+					nene_Vec2_len(ball->velocity)
+				)
+			);
+		}
 	}
 }
 

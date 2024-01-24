@@ -2,5 +2,6 @@
 symbol.txt
 out.lst
 /out/
+/libnene/
 *.o
 *.bin

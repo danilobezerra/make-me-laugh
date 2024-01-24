@@ -199,10 +199,7 @@ void game_Ball_apply_gravity(game_Ball *const ball, float gravity_acc) {
 	ball->velocity = nene_Vec2_add(
 		ball->velocity,
 		nene_Vec2_scale(
-			nene_Vec2_scale(
-				(nene_Vec2){ .y = -1.0f },
-				gravity_acc
-			),
+			(nene_Vec2){ .y = -gravity_acc },
 			nene_Core_get_delta_time()
 		)
 	);

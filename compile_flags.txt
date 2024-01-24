@@ -1,0 +1,6 @@
+-Wall
+-Wextra
+-Wpedantic
+-std=c99
+-I./libnene/include/
+-I./libnene/include/SDL2

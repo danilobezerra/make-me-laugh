@@ -1,10 +1,9 @@
 #include "nene/color.h"
 #include "nene/core.h"
 #include "nene/include/nene/math/rectf.h"
+#include "nene/include/nene/math/vec2.h"
 #include "nene/math/vec2.h"
 #include "nene/math/rectf.h"
-#include "nene/intersections.h"
-#include "nene/math/segment.h"
 #include <stdbool.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -70,8 +69,8 @@ game_PlayerInput game_PlayerInput_get(uint8_t player_id) {
 		result = (game_PlayerInput){
 			.is_moving = true,
 			.moving = (nene_Vec2){
-				.x = is_left_held ? -1.0f : (is_right_held ?  1.0f : 0.0f),
-				.y =   is_up_held ?  1.0f : ( is_down_held ? -1.0f : 0.0f),
+				.x = is_left_held ? -1.0f : (is_right_held ? 1.0f : 0.0f),
+				.y =   is_up_held ? -1.0f : ( is_down_held ? 1.0f : 0.0f),
 			}
 		};
 	}
@@ -96,10 +95,10 @@ void game_Entity_translate(game_Entity *const entity, nene_Vec2 translation) {
 
 nene_Rectf game_Entity_bounding_box(const game_Entity *const entity) {
 	return (nene_Rectf) {
-		.pos = nene_Vec2_add(
+		.pos = nene_Vec2_sub(
 			entity->position,
 			nene_Vec2_scale(
-				(nene_Vec2){ .x = -entity->size.x, .y = entity->size.y },
+				(nene_Vec2){ .x = entity->size.x, .y = entity->size.y },
 				0.5f
 			)
 		),
@@ -112,13 +111,13 @@ void game_Entity_draw(const game_Entity *const entity) {
 		nene_Rectf_to_rect(game_Entity_bounding_box(entity)),
 		false,
 		entity->color,
-		true
+		false
 	);
 	nene_Core_render_draw_rect(
 		(nene_Rect){ .pos = nene_Vec2_to_vec2i(entity->position), .size = {.x = 2, .y = 2 } },
 		false,
 		nene_Color_white(),
-		true
+		false
 	);
 }
 
@@ -175,16 +174,6 @@ void game_Rope_draw(const game_Rope *const rope) {
 	}
 }
 
-nene_Segment game_Rope_get_segment(const game_Rope *const rope) {
-	const game_RopeUnit *const first_unit = &rope->units[0]; 
-	const game_RopeUnit *const last_unit = &rope->units[game_ROPE_LENGTH - 1]; 
-
-	return (nene_Segment){
-		.origin = nene_Rectf_get_center(game_Entity_bounding_box(&first_unit->as_entity)),
-		.ending = nene_Rectf_get_center(game_Entity_bounding_box(&last_unit->as_entity)),
-	};
-}
-
 game_Ball game_Ball_init(nene_Vec2 pos) {
 	return (game_Ball){
 		.as_entity = game_Entity_init(
@@ -199,31 +188,82 @@ void game_Ball_apply_gravity(game_Ball *const ball, float gravity_acc) {
 	ball->velocity = nene_Vec2_add(
 		ball->velocity,
 		nene_Vec2_scale(
-			(nene_Vec2){ .y = -gravity_acc },
+			(nene_Vec2){ .y = gravity_acc },
 			nene_Core_get_delta_time()
 		)
 	);
 	game_Entity_translate(&ball->as_entity, ball->velocity);
 }
 
-void game_Ball_update(game_Ball *const ball, game_Rope *const rope) {
+bool game_is_segments_intersecting(nene_Vec2 o1, nene_Vec2 e1, nene_Vec2 o2, nene_Vec2 e2) {
+	// ported from Nene framework, from nene/src/intersections.c
+	// "o" stands for "origin", "e" stands for "ending"
+	const nene_Vec2 v1 = nene_Vec2_sub(e1, o1);
+	const nene_Vec2 v2 = nene_Vec2_sub(e2, o2);
+	const float cross12 = nene_Vec2_cross(v1, v2);
+
+	if (cross12 == 0.0f) {
+		return false;
+	}
+
+	const nene_Vec2 oo = nene_Vec2_sub(o2, o1);
+	const float intersecting_scalar1 = nene_Vec2_cross(oo, v2) / cross12;
+	const float intersecting_scalar2 = -nene_Vec2_cross(v1, oo) / cross12;
+
+	return (
+		0.0f <= intersecting_scalar1 && intersecting_scalar1 <= 1.0f &&
+		0.0f <= intersecting_scalar2 && intersecting_scalar2 <= 1.0f
+	);
+}
+
+bool game_Ball_is_intersecting_rope(game_Ball *const ball, nene_Vec2 ro, nene_Vec2 re) {
+	// ro, re: rope origin, rope ending
+	// bbo, bbe: bounding-box origin, bounding-box ending
+	nene_Rectf ball_bb = game_Entity_bounding_box(&ball->as_entity);
+	nene_Vec2 bbo, bbe;
+
+	// top side
+	bbo = ball_bb.pos;
+	bbe = nene_Vec2_add(bbo, (nene_Vec2){ .x = ball_bb.size.x });
+	if (game_is_segments_intersecting(ro, re, bbo, bbe)) {
+		return true;
+	}
+	// right side
+	bbo = bbe;
+	bbe = nene_Vec2_add(bbe, (nene_Vec2){ .y = ball_bb.size.y });
+	if (game_is_segments_intersecting(ro, re, bbo, bbe)) {
+		return true;
+	}
+	// bottom side
+	bbo = bbe;
+	bbe = nene_Vec2_add(ball_bb.pos, (nene_Vec2){ .y = ball_bb.size.y });
+	if (game_is_segments_intersecting(ro, re, bbo, bbe)) {
+		return true;
+	}
+	// left side
+	bbo = bbe;
+	bbe = ball_bb.pos;
+	if (game_is_segments_intersecting(ro, re, bbo, bbe)) {
+		return true;
+	}
+
+	return false;
+}
+
+void game_Ball_update(game_Ball *const ball, nene_Vec2 p1, nene_Vec2 p2) {
 	game_Ball_apply_gravity(ball, 48.0f);
 
-	const nene_Segment rope_seg = game_Rope_get_segment(rope);
-	const nene_IntersectionSegmentWithRectf br_intersection = nene_IntersectionSegmentWithRectf_get_intersection(
-		rope_seg,
-		game_Entity_bounding_box(&ball->as_entity)
-	);
+	if (game_Ball_is_intersecting_rope(ball, p1, p2)) {
+		nene_Vec2 rope_perp = nene_Vec2_normalize(nene_Vec2_perpendicular(nene_Vec2_sub(p2, p1)));
 
-	if (br_intersection.count > 0) {
-		if (nene_Vec2_dot(ball->velocity, nene_Vec2_perpendicular(nene_Segment_as_vec2(rope_seg))) < -0.2f) {
-			nene_Vec2 intersection_perpdir = nene_Vec2_perpendicular(nene_Vec2_normalize(nene_Segment_as_vec2(br_intersection.intersection)));
+		if (rope_perp.y < 0.0f) {
+			rope_perp = nene_Vec2_negate(rope_perp);
+		}
 
-			ball->velocity = nene_Vec2_negate(
-				nene_Vec2_scale(
-					intersection_perpdir,
-					nene_Vec2_len(ball->velocity)
-				)
+		if (nene_Vec2_dot(ball->velocity, rope_perp) > 0.2f) {
+			ball->velocity = nene_Vec2_scale(
+				nene_Vec2_negate(rope_perp),
+				nene_Vec2_len(ball->velocity)
 			);
 		}
 	}
@@ -239,9 +279,9 @@ game_Ball game_ball;
 game_Rope game_rope;
 
 int main(int argc, char *argv[]) {
-	game_ball = game_Ball_init((nene_Vec2){ .x = 0.0f, .y = 300.0f });
-	game_players[0] = game_Player_init(0, (nene_Vec2){ .x = -100.0f, .y = -100.0f });
-	game_players[1] = game_Player_init(1, (nene_Vec2){ .x =  100.0f, .y = -100.0f });
+	game_ball = game_Ball_init((nene_Vec2){ .x = 350.0f, .y = 100.0f });
+	game_players[0] = game_Player_init(0, (nene_Vec2){ .x = 250.0f, .y = 500.0f });
+	game_players[1] = game_Player_init(1, (nene_Vec2){ .x = 450.0f, .y = 500.0f });
 
 	game_Rope_init(&game_rope);
 
@@ -258,7 +298,7 @@ int main(int argc, char *argv[]) {
 			game_Player_update(&game_players[i]);
 		}
 		game_Rope_update(&game_rope, game_players[0].as_entity.position, game_players[1].as_entity.position);
-		game_Ball_update(&game_ball, &game_rope);
+		game_Ball_update(&game_ball, game_players[0].as_entity.position, game_players[1].as_entity.position);
 
 		nene_Core_render_clear(nene_Color_black());
 

@@ -1,6 +1,5 @@
 #include "intersection.h"
 #include "gamemath.h"
-#include "maths.h"
 
 // tests the intersections between two segments: o1-->e1 and o2-->e2
 // might be a bit expensive.

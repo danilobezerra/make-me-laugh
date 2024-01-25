@@ -1,17 +1,8 @@
 #ifndef MAKE_ME_LAUGH_ROPE_H
 #define MAKE_ME_LAUGH_ROPE_H
 
-#include "global.h"
-#include "entity.h"
-#include "rope_unit.h"
+#include <genesis.h>
 
-typedef struct {
-    RopeUnit units[ROPE_LENGTH];
-} Rope;
-
-void Rope_init(Rope* rope);
-void Rope_update(Rope* rope, Vect2D_f16 player1_pos, Vect2D_f16 player2_pos);
-void Rope_draw(Rope* rope);
-void Rope_get_segment(Rope* rope);
+void Rope_draw(const V2f16 *p1, const V2f16 *p2);
 
 #endif //MAKE_ME_LAUGH_ROPE_H

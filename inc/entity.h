@@ -3,15 +3,8 @@
 
 #include <genesis.h>
 
-typedef struct {
-    Vect2D_f16 position;
-    Sprite sprite;
-    Vect2D_f16 size;
-} Entity;
-
-Entity Entity_init(Vect2D_f16 position, Sprite sprite, Vect2D_f16 size);
-void Entity_translate(Entity* entity, Vect2D_f16 translation);
-Box Entity_bounding_box(Entity* entity);
-void Entity_draw(Entity* entity);
+void Entity_translate(Vect2D_f16 *position, Vect2D_f16 translation);
+Box Entity_bounding_box(const Vect2D_f16 *position, Vect2D_f16 size);
+void Entity_draw(Box bb, u16 color);
 
 #endif //MAKE_ME_LAUGH_ENTITY_H

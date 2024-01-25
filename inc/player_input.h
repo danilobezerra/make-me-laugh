@@ -1,7 +1,3 @@
-//
-// Created by Danilo Bezerra on 23/01/24.
-//
-
 #ifndef MAKE_ME_LAUGH_PLAYER_INPUT_H
 #define MAKE_ME_LAUGH_PLAYER_INPUT_H
 

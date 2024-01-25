@@ -1,7 +1,3 @@
-//
-// Created by Danilo Bezerra on 24/01/24.
-//
-
 #ifndef MAKE_ME_LAUGH_GLOBAL_H
 #define MAKE_ME_LAUGH_GLOBAL_H
 

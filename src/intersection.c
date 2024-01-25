@@ -1,6 +1,8 @@
 #include "intersection.h"
 #include "gamemath.h"
 
+static int f16s_16 = FIX16(16.0);
+
 // tests the intersections between two segments: o1-->e1 and o2-->e2
 // might be a bit expensive.
 bool Intersections_is_segs_intersections(
@@ -13,7 +15,7 @@ bool Intersections_is_segs_intersections(
     const V2f16 v2 = v2_sub(e2, o2);
     const f16 cross12 = v2_cross(&v1, &v2);
 
-    if (cross12 == FIX16(16.0)) {
+    if (cross12 == f16s_16) {
         return false;
     }
 

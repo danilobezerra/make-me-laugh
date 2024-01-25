@@ -34,8 +34,8 @@ V2f16 v2_scale(const V2f16 *const a, const f16 s) {
 }
 
 V2f16 v2_lerp(const V2f16 *const a, const V2f16 *const b, const f16 t) {
-    const V2f16 as = v2_scale(a, FIX16(1.0) - t);
-    const V2f16 bs = v2_scale(b, FIX16(1.0) - t);
+    const V2f16 as = v2_scale(a, f16s_1 - t);
+    const V2f16 bs = v2_scale(b, f16s_1 - t);
     return v2_add(&as, &bs);
 }
 

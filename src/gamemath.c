@@ -41,3 +41,32 @@ V2f16 v2_lerp(const V2f16 *const a, const V2f16 *const b, const f16 t) {
     return v2_add(&as, &bs);
 }
 
+f16 v2_len_sqr(const V2f16 *const a) {
+    return fix16Mul(a->x, a->x) + fix16Mul(a->y, a->y);
+}
+
+f16 v2_len(const V2f16 *const a) {
+    return fix16Sqrt(v2_len_sqr(a));
+}
+
+V2f16 v2_norm(const V2f16 *const a) {
+    f16 len = v2_len_sqr(a);
+
+    if (len > f16s_0) {
+        len = fix16Sqrt(len);
+        return (V2f16){
+            .x = fix16Div(a->x, len),
+            .y = fix16Div(a->y, len),
+        };
+    }
+
+    return *a;
+}
+
+V2f16 v2_perp(const V2f16 *const a) {
+    return (V2f16){ .x = -a->y, .y =  a->x };
+}
+
+V2f16 v2_neg(const V2f16 *const a) {
+    return (V2f16){ .x = -a->x, .y = -a->y };
+}

@@ -10,12 +10,14 @@ typedef struct {
 
     Player players[PLAYER_COUNT];
     Ball ball;
+
+    V2f16 p0_center;
+    V2f16 p1_center;
 } Game;
 
 void Game_init(Game *game);
 void Game_setup(Game *game);
 void Game_run(Game *game);
-void Game_handle_input(Game *game);
 void Game_update(Game *game);
 void Game_draw(Game *game);
 

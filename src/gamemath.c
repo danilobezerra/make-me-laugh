@@ -3,6 +3,8 @@
 
 const f16 f16s_0 = FIX16(0.0);
 const f16 f16s_1 = FIX16(1.0);
+const f16 f16s_16 = FIX16(16.0);
+const f16 f16s_32 = FIX16(32.0);
 
 V2f16 v2_add(const V2f16 *const a, const V2f16 *const b) {
     return (V2f16){

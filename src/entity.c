@@ -1,36 +1,28 @@
 #include "entity.h"
+#include "gamemath.h"
+#include "maths.h"
 
-void Entity_translate(Vect2D_f16 *const position, Vect2D_f16 translation) {
-//    *position = nene_Vec2_add(
-//        *position,
-//        nene_Vec2_scale(translation, nene_Core_get_delta_time())
-//    );
+
+void Entity_translate(V2f16 *const position, const V2f16 *const translation) {
+    // TODO: should we use deltatime?
+    const f16 dt = f16s_1;
+    const V2f16 delta = v2_scale(translation, dt);
+    *position = v2_add(position, &delta);
 }
 
-Box Entity_bounding_box(const Vect2D_f16 *const position, const Vect2D_f16 size) {
-//    return (nene_Rectf){
-//            .pos = *position,
-//            .size = size,
-//    };
-    return (Box) {};
+Box Entity_bounding_box(const V2f16 *const position, const V2u16 size) {
+    return (Box) {
+        .x = position->x,
+        .y = position->y,
+        .w = size.x,
+        .h = size.y,
+    };
 }
 
-void Entity_draw(const Box bb, u16 color) {
-//    nene_Core_render_draw_rect(
-//            nene_Rectf_to_rect(bb),
-//            false,
-//            color,
-//            false
-//    );
+void Entity_draw(const Box *const bb, const u16 color) {
     PAL_setColor(1, color);
-    VDP_fillTileMapRect(BG_A, TILE_ATTR_FULL(PAL0, 0, FALSE, FALSE, 1), bb.x, bb.y, bb.w, bb.h);
+    VDP_fillTileMapRect(BG_A, TILE_ATTR_FULL(PAL0, 0, FALSE, FALSE, 1), bb->x, bb->y, bb->w, bb->h);
 
-//    nene_Core_render_draw_rect(
-//            (nene_Rect){ .pos = nene_Vec2_to_vec2i(bb.pos), .size = {.x = 2, .y = 2 } },
-//            false,
-//            nene_Color_white(),
-//            false
-//    );
     PAL_setColor(2, RGB24_TO_VDPCOLOR(0xFFFFFF));
-    VDP_fillTileMapRect(BG_A, TILE_ATTR_FULL(PAL0, 0, FALSE, FALSE, 2), bb.x, bb.y, 2, 2);
+    VDP_fillTileMapRect(BG_A, TILE_ATTR_FULL(PAL0, 0, FALSE, FALSE, 2), bb->x, bb->y, 2, 2);
 }

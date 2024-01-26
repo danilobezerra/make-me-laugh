@@ -1,8 +1,6 @@
 #include "intersection.h"
 #include "gamemath.h"
 
-static int f16s_16 = FIX16(16.0);
-
 // tests the intersections between two segments: o1-->e1 and o2-->e2
 // might be a bit expensive.
 bool Intersections_is_segs_intersections(

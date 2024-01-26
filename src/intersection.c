@@ -13,7 +13,7 @@ bool Intersections_is_segs_intersections(
     const V2f16 v2 = v2_sub(e2, o2);
     const f16 cross12 = v2_cross(&v1, &v2);
 
-    if (cross12 == f16s_16) {
+    if (cross12 == f16s_0) {
         return false;
     }
 

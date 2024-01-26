@@ -3,6 +3,7 @@
 #include "player.h"
 #include "rope.h"
 #include "ball.h"
+#include "vdp.h"
 
 void Game_init(Game *game) {
     JOY_init();
@@ -13,9 +14,9 @@ void Game_init(Game *game) {
 }
 
 void Game_setup(Game *game) {
-    game->ball = Ball_init((V2f16) { .x = FIX16(350.0), .y = FIX16(100.0) });
-    game->players[0] = Player_init(0, (V2f16) { .x = FIX16(250.0), .y = FIX16(500.0) });
-    game->players[1] = Player_init(1, (V2f16) { .x = FIX16(450.0), .y = FIX16(500.0) });
+    game->ball = Ball_init((V2f16) { .x = FIX16(6.0), .y = FIX16(6.0) });
+    game->players[0] = Player_init(0, (V2f16) { .x = FIX16(2.5), .y = FIX16(5.0) });
+    game->players[1] = Player_init(1, (V2f16) { .x = FIX16(4.5), .y = FIX16(5.0) });
 }
 
 void Game_run(Game *game) {
@@ -38,7 +39,8 @@ void Game_update(Game *game) {
 }
 
 void Game_draw(Game *game) {
-    SYS_doVBlankProcess();
+    VDP_clearPlane(BG_A, TRUE);
+    VDP_clearPlane(BG_B, TRUE);
 
     for (int i = 0; i < PLAYER_COUNT; i++) {
         Player_draw(&game->players[i]);
@@ -46,4 +48,7 @@ void Game_draw(Game *game) {
 
     Rope_draw(&game->p0_center, &game->p1_center);
     Ball_draw(&game->ball);
+
+    VDP_waitVBlank(true);
+    SYS_doVBlankProcess();
 }

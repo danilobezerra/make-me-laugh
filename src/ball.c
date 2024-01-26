@@ -17,9 +17,9 @@ void Ball_apply_gravity(Ball *const ball, fix16 gravity_acc) {
 
 
 void Ball_update(Ball *const ball, const V2f16 *const p1, const V2f16 *const p2) {
-    Ball_apply_gravity(ball, FIX16(48.0));
+    Ball_apply_gravity(ball, FIX16(0.02));
 
-    V2f16 bb_size = { .x = f16s_16, .y = f16s_16 };
+    V2f16 bb_size = { .x = f16s_4, .y = f16s_4 };
 
     if (Intersections_is_box_intersecting_seg(&ball->position, &bb_size, p1, p2)) {
         // TODO: maybe normalize could go after the dot operation...
@@ -40,7 +40,7 @@ void Ball_update(Ball *const ball, const V2f16 *const p1, const V2f16 *const p2)
 }
 
 void Ball_draw(const Ball *const ball) {
-    const Box ball_bb = Entity_bounding_box(&ball->position, (V2u16){ .x = 16, .y = 16 });
+    const Box ball_bb = Entity_bounding_box(&ball->position, (V2u16){ .x = 1, .y = 1 });
     Entity_draw(
         &ball_bb,
         RGB24_TO_VDPCOLOR(0xFFFF00) // yellow

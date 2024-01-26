@@ -18,6 +18,9 @@ V2f16 v2_neg(const V2f16 *a);
 
 extern const f16 f16s_0;
 extern const f16 f16s_1;
+extern const f16 f16s_2;
+extern const f16 f16s_4;
+extern const f16 f16s_8;
 extern const f16 f16s_16;
 extern const f16 f16s_32;
 

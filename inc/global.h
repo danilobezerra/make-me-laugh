@@ -1,7 +1,6 @@
 #ifndef MAKE_ME_LAUGH_GLOBAL_H
 #define MAKE_ME_LAUGH_GLOBAL_H
 
-#define PLAYER_SPEED FIX16(4.0)
 #define ROPE_LENGTH 8
 #define PLAYER_COUNT 2
 

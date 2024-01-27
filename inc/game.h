@@ -2,6 +2,7 @@
 #define MAKE_ME_LAUGH_GAME_H
 
 #include <genesis.h>
+#include "global.h"
 #include "player.h"
 #include "ball.h"
 

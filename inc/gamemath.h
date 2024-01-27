@@ -25,5 +25,8 @@ extern const f16 f16s_10;
 extern const f16 f16s_16;
 extern const f16 f16s_32;
 
+extern const V2f16 screen_clamp_min;
+extern const V2f16 screen_clamp_max;
+
 #endif // MAKE_ME_LAUGH_GAMEMATH_H
  

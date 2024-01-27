@@ -10,6 +10,9 @@ const f16 f16s_10 = FIX16(10.0);
 const f16 f16s_16 = FIX16(16.0);
 const f16 f16s_32 = FIX16(32.0);
 
+const V2f16 screen_clamp_min = { .x = FIX16(10.0), .y = FIX16(10.0)};
+const V2f16 screen_clamp_max = { .x = FIX16(300.0), .y = FIX16(220.0)};
+
 V2f16 v2_add(const V2f16 *const a, const V2f16 *const b) {
     return (V2f16){
         .x = a->x + b->x,

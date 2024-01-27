@@ -5,14 +5,16 @@
 #include "player.h"
 #include "ball.h"
 
+typedef enum {
+    STATE_SPLASH, STATE_MAIN_MENU, STATE_GAMEPLAY
+} GameState;
+
 typedef struct {
-    bool isRunning;
+    bool is_running;
+    GameState current_state;
 
     Player players[PLAYER_COUNT];
     Ball ball;
-
-    V2f16 p0_center;
-    V2f16 p1_center;
 } Game;
 
 void Game_init(Game *game);

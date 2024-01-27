@@ -21,6 +21,7 @@ extern const f16 f16s_1;
 extern const f16 f16s_2;
 extern const f16 f16s_4;
 extern const f16 f16s_8;
+extern const f16 f16s_10;
 extern const f16 f16s_16;
 extern const f16 f16s_32;
 

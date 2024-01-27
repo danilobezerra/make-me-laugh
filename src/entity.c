@@ -4,14 +4,20 @@
 
 
 void Entity_translate(V2f16 *const position, const V2f16 *const translation) {
-    // TODO: should we use deltatime?
     *position = v2_add(position, translation);
+}
+
+void Entity_clamp_pos(V2f16 *const pos, const V2f16 *const posmin, const V2f16 *const posmax) {
+    *pos = (V2f16){
+        .x = clamp(pos->x, posmin->x, posmax->x),
+        .y = clamp(pos->y, posmin->y, posmax->y),
+    };
 }
 
 Box Entity_bounding_box(const V2f16 *const position, const V2u16 size) {
     return (Box) {
-        .x = position->x,
-        .y = position->y,
+        .x = fix16ToRoundedInt(position->x),
+        .y = fix16ToRoundedInt(position->y),
         .w = size.x,
         .h = size.y,
     };

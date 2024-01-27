@@ -6,6 +6,7 @@ const f16 f16s_1 = FIX16(1.0);
 const f16 f16s_2 = FIX16(2.0);
 const f16 f16s_4 = FIX16(4.0);
 const f16 f16s_8 = FIX16(8.0);
+const f16 f16s_10 = FIX16(10.0);
 const f16 f16s_16 = FIX16(16.0);
 const f16 f16s_32 = FIX16(32.0);
 

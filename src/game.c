@@ -12,8 +12,6 @@ V2f16 p0_center;
 V2f16 p1_center;
 
 void Game_init(Game *game) {
-    VDP_init();
-
     JOY_init();
     SPR_init();
 
@@ -34,6 +32,7 @@ void Game_run(Game *game) {
         Game_update(game);
         Game_draw(game);
 
+        SPR_update();
         SYS_doVBlankProcess();
     }
 }
@@ -63,14 +62,14 @@ void Game_update(Game *game) {
 }
 
 void Game_draw(Game *game) {
+    VDP_clearPlane(BG_A, TRUE);
+    DMA_waitCompletion();
+
+    VDP_clearPlane(BG_B, TRUE);
+    DMA_waitCompletion();
+
     switch (game->current_state) {
         case STATE_SPLASH:
-            VDP_clearPlane(BG_A, TRUE);
-            DMA_waitCompletion();
-
-            VDP_clearPlane(BG_B, TRUE);
-            DMA_waitCompletion();
-
             VDP_drawImageEx(BG_B, &splash, TILE_ATTR_FULL(PAL0, FALSE, FALSE, FALSE, user_index), 0, 0, FALSE, TRUE);
             user_index += splash.tileset->numTile;
 
@@ -85,9 +84,6 @@ void Game_draw(Game *game) {
         case STATE_MAIN_MENU:
             break;
         case STATE_GAMEPLAY:
-            VDP_clearPlane(BG_A, TRUE);
-            VDP_clearPlane(BG_B, TRUE);
-
             for (int i = 0; i < PLAYER_COUNT; i++) {
                 Player_draw(&game->players[i]);
             }
@@ -97,6 +93,4 @@ void Game_draw(Game *game) {
 
             break;
     }
-
-    SPR_update();
 }

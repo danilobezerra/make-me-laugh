@@ -24,8 +24,8 @@ void Entity_draw(const Box *const bb, const u16 color) {
     s16 y = fix16ToRoundedInt(py);
 
     PAL_setColor(1, color);
-    VDP_fillTileMapRect(BG_A, TILE_ATTR_FULL(PAL0, 0, FALSE, FALSE, 1), x, y, bb->w, bb->h);
+    VDP_fillTileMapRect(BG_A, TILE_ATTR_FULL(PAL0, 0, FALSE, FALSE, 1), x, y, 1, 1);
 
     PAL_setColor(2, RGB24_TO_VDPCOLOR(0xFFFFFF));
-    VDP_fillTileMapRect(BG_A, TILE_ATTR_FULL(PAL0, 0, FALSE, FALSE, 2), x, y, 2, 2);
+    VDP_fillTileMapRect(BG_A, TILE_ATTR_FULL(PAL0, 0, FALSE, FALSE, 2), x, y, 1, 1);
 }

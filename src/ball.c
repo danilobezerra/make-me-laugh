@@ -40,7 +40,7 @@ void Ball_update(Ball *const ball, const V2f16 *const p1, const V2f16 *const p2)
 }
 
 void Ball_draw(const Ball *const ball) {
-    const Box ball_bb = Entity_bounding_box(&ball->position, (V2u16){ .x = 1, .y = 1 });
+    const Box ball_bb = Entity_bounding_box(&ball->position, (V2u16){ .x = 8, .y = 8 });
     Entity_draw(
         &ball_bb,
         RGB24_TO_VDPCOLOR(0xFFFF00) // yellow

@@ -23,7 +23,12 @@ void Game_setup(Game *game) {
     PAL_setColors(0, palette_black, 64, DMA);
     user_index = TILE_USER_INDEX;
 
-    game->current_state = STATE_SPLASH;
+    //game->current_state = STATE_SPLASH;
+    game->current_state = STATE_GAMEPLAY;
+
+    game->ball = Ball_init((V2f16) { .x = FIX16(6.0), .y = FIX16(6.0) });
+    game->players[0] = Player_init(0, (V2f16) { .x = FIX16(2.5), .y = FIX16(5.0) });
+    game->players[1] = Player_init(1, (V2f16) { .x = FIX16(4.5), .y = FIX16(5.0) });
 }
 
 void Game_run(Game *game) {
@@ -42,9 +47,7 @@ void Game_update(Game *game) {
     // kprintf(":: GAME UPDATE ::");
     switch (game->current_state) {
         case STATE_SPLASH:
-            game->ball = Ball_init((V2f16) { .x = FIX16(6.0), .y = FIX16(6.0) });
-            game->players[0] = Player_init(0, (V2f16) { .x = FIX16(2.5), .y = FIX16(5.0) });
-            game->players[1] = Player_init(1, (V2f16) { .x = FIX16(4.5), .y = FIX16(5.0) });
+
 
             break;
         case STATE_MAIN_MENU:

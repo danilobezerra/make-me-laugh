@@ -4,6 +4,7 @@
 #include "player.h"
 #include "rope.h"
 #include "ball.h"
+#include "tools.h"
 
 u16 main_palette[64];
 u16 user_index;
@@ -39,6 +40,7 @@ void Game_run(Game *game) {
 }
 
 void Game_update(Game *game) {
+    kprintf(":: GAME UPDATE ::");
     switch (game->current_state) {
         case STATE_SPLASH:
             game->ball = Ball_init((V2f16) { .x = FIX16(6.0), .y = FIX16(6.0) });
@@ -50,12 +52,14 @@ void Game_update(Game *game) {
             break;
         case STATE_GAMEPLAY:
             for (int i = 0; i < PLAYER_COUNT; ++i) {
+                kprintf("-- PLAYER %d --", i);
                 Player_update(&game->players[i]);
             }
 
             p0_center = Player_get_center(&game->players[0]);
             p1_center = Player_get_center(&game->players[1]);
 
+            kprintf("-- BALL --");
             Ball_update(&game->ball, &p0_center, &p1_center);
 
             break;
@@ -63,6 +67,7 @@ void Game_update(Game *game) {
 }
 
 void Game_draw(Game *game) {
+    kprintf(":: GAME DRAW ::");
     switch (game->current_state) {
         case STATE_SPLASH:
             VDP_clearPlane(BG_A, TRUE);
@@ -89,10 +94,13 @@ void Game_draw(Game *game) {
             VDP_clearPlane(BG_B, TRUE);
 
             for (int i = 0; i < PLAYER_COUNT; i++) {
+                kprintf("-- PLAYER %d--", i);
                 Player_draw(&game->players[i]);
             }
 
+            kprintf("-- ROPE -- ");
             Rope_draw(&p0_center, &p1_center);
+            kprintf("-- BALL -- ");
             Ball_draw(&game->ball);
 
             break;

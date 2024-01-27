@@ -41,5 +41,6 @@ V2f16 Player_get_center(const Player *const player) {
 
 void Player_draw(const Player *const player) {
     const Box player_bb = Entity_bounding_box(&player->position, (V2u16){.x = 1, .y = 1 });
-    Entity_draw(&player_bb, player->entity_id == 0 ? RGB24_TO_VDPCOLOR(0xFF0000) : RGB24_TO_VDPCOLOR(0x0000FF));
+    kprintf("player draw pos %hd %hd", player_bb.x, player_bb.y);
+    // Entity_draw(&player_bb, player->entity_id == 0 ? RGB24_TO_VDPCOLOR(0xFF0000) : RGB24_TO_VDPCOLOR(0x0000FF));
 }

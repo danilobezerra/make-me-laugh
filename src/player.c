@@ -4,7 +4,7 @@
 #include "entity.h"
 #include "gamemath.h"
 
-static f16 PLAYER_SPEED = FIX16(0.04);
+const f16 PLAYER_SPEED = FIX16(0.04);
 
 Player Player_init(u8 player_id, V2f16 pos) {
     Sprite *playerSprite = SPR_addSprite(&player_sprite, pos.x, pos.y, TILE_ATTR(PLAYER_PALETTE, FALSE, FALSE, FALSE));

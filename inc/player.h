@@ -10,6 +10,8 @@ typedef struct {
     u8 entity_id;
 } Player;
 
+extern const f16 PLAYER_SPEED;
+
 void Player_boundaries(Player *ball);
 Player Player_init(u8 player_id, V2f16 pos);
 void Player_apply_gravity(Player *player);

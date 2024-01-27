@@ -42,9 +42,13 @@ bool Ball_boundaries(Ball *const ball) {
     return touched_floor;
 }
 
-void Ball_update(Ball *const ball, const V2f16 *const p1, const V2f16 *const p2) {
+bool Ball_update(Ball *const ball, const V2f16 *const p1, const V2f16 *const p2) {
     Ball_apply_gravity(ball);
-    Ball_boundaries(ball);
+
+    if (Ball_boundaries(ball)) {
+        kprintf("PERDEU!!");
+        return true;
+    }
 
     V2f16 bb_size = { .x = f16s_4, .y = f16s_4 };
 
@@ -74,6 +78,8 @@ void Ball_update(Ball *const ball, const V2f16 *const p1, const V2f16 *const p2)
     //     fix16ToInt(fix16Int(ball->velocity.x)), fix16ToInt(fix16Mul(fix16Frac(ball->velocity.x), FIX16(100.0))),
     //     fix16ToInt(fix16Int(ball->velocity.y)), fix16ToInt(fix16Mul(fix16Frac(ball->velocity.y), FIX16(100.0)))
     // );
+
+    return false;
 }
 
 void Ball_draw(const Ball *const ball) {

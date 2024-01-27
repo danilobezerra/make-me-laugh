@@ -3,10 +3,12 @@
 #include "gamemath.h"
 #include "global.h"
 #include "maths.h"
+#include "player.h"
+
+static f16 ROPE_MAX_LIMIT = FIX16(64.0);
 
 Rope Rope_init(V2f16 pos) {
     Rope rope;
-
     for (int i = 0; i < ROPE_LENGTH; ++i) {
         rope.units[i].sprite = SPR_addSprite(&rope_sprite, pos.x, pos.y, TILE_ATTR(ROPE_PALETTE, FALSE, FALSE, FALSE));
     }
@@ -14,6 +16,25 @@ Rope Rope_init(V2f16 pos) {
     PAL_setPalette(ROPE_PALETTE, rope_sprite.palette->data, DMA);
     return rope;
 }
+void Rope_update(Player *const p1, Player *const p2) {
+    V2f16 rope_vec = v2_sub(&p2->position, &p1->position);
+
+    // TODO: possible optimization: use v2_len_sqr
+    const f16 rope_len = v2_len(&rope_vec);
+
+    if (rope_len >= ROPE_MAX_LIMIT) {
+        V2f16 rope_center = v2_lerp(&p2->position, &p1->position, FIX16(0.5));
+        V2f16 rope_center_dir = v2_norm(&rope_center);
+        const f16 player_double_speed = fix16Mul(PLAYER_SPEED, f16s_2);
+
+        V2f16 delta = v2_scale(&rope_center_dir, player_double_speed);
+        p1->velocity = v2_add(&p1->velocity, &delta);
+
+        delta = v2_neg(&delta);
+        p2->velocity = v2_add(&p2->velocity, &delta);
+    }
+}
+
 
 void Rope_draw(const Rope *const rope, const V2f16 *const p1, const V2f16 *const p2) {
     const f16 len = FIX16(ROPE_LENGTH);

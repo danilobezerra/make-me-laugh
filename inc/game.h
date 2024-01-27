@@ -4,6 +4,7 @@
 #include <genesis.h>
 #include "global.h"
 #include "player.h"
+#include "rope.h"
 #include "ball.h"
 
 typedef enum {
@@ -15,6 +16,7 @@ typedef struct {
     GameState current_state;
 
     Player players[PLAYER_COUNT];
+    Rope rope;
     Ball ball;
 } Game;
 

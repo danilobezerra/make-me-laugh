@@ -29,6 +29,7 @@ void Game_setup(Game *game) {
     game->ball = Ball_init((V2f16) { .x = FIX16(6.0), .y = FIX16(6.0) });
     game->players[0] = Player_init(0, (V2f16) { .x = FIX16(2.5), .y = FIX16(5.0) });
     game->players[1] = Player_init(1, (V2f16) { .x = FIX16(4.5), .y = FIX16(5.0) });
+    game->rope = Rope_init((V2f16) { .x = FIX16(6.0), .y = FIX16(6.0) });
 }
 
 void Game_run(Game *game) {
@@ -99,7 +100,7 @@ void Game_draw(Game *game) {
             }
 
             // kprintf("-- ROPE -- ");
-            Rope_draw(&p0_center, &p1_center);
+            Rope_draw(&game->rope, &p0_center, &p1_center);
             // kprintf("-- BALL -- ");
             Ball_draw(&game->ball);
 

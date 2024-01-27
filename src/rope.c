@@ -16,6 +16,7 @@ Rope Rope_init(V2f16 pos) {
     PAL_setPalette(ROPE_PALETTE, rope_sprite.palette->data, DMA);
     return rope;
 }
+
 void Rope_update(Player *const p1, Player *const p2) {
     V2f16 rope_vec = v2_sub(&p2->position, &p1->position);
 

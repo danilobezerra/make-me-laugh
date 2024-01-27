@@ -3,6 +3,7 @@
 -Wpedantic
 -std=c99
 -I./inc
+-I./res
 -I/opt/toolchains/mars/m68k-elf/include
 -I/opt/toolchains/mars/m68k-elf/inc
 -I/opt/toolchains/mars/m68k-elf/res

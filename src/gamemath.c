@@ -90,13 +90,8 @@ f16 v2_len(const V2f16 *const a) {
 }
 
 f32 v2_len32(const V2f32 *const a) {
-    kprintf("ax ay %ld, %ld", fix32ToInt(a->x), fix32ToInt(a->y));
     u32 l = getApproximatedDistance(fix32ToInt(a->x), fix32ToInt(a->y));
-    kprintf("l %ld", l);
     f32 lf32 = intToFix32(l);
-    kprintf("lf32 %ld.%ld",
-        fix32ToInt(fix32Int(lf32)), fix32ToInt(fix32Mul(fix32Frac(lf32), FIX32(100.0)))
-    );
     return lf32;
 }
 
@@ -115,9 +110,6 @@ V2f16 v2_norm(const V2f16 *const a) {
 
 V2f32 v2_norm32(const V2f32 *const a) {
     f32 len = v2_len32(a);
-    kprintf("norm32 len: %ld.%ld",
-        fix32ToInt(fix32Int(len)), fix32ToInt(fix32Mul(fix32Frac(len), FIX32(100.0)))
-    );
 
     if (len > FIX32(0.0)) {
         return (V2f32){

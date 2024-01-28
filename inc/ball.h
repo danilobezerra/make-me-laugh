@@ -7,6 +7,7 @@ typedef struct {
     Sprite *sprite;
     V2f16 position;
     V2f16 velocity;
+    bool is_intersecting_rope;
 } Ball;
 
 Ball Ball_init(V2f16 pos);

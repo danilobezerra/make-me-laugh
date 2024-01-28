@@ -70,6 +70,20 @@ V2f16 v2_norm(const V2f16 *const a) {
     return *a;
 }
 
+V2f16 v2_norm_with_sqrt(const V2f16 *const a) {
+    f16 len = v2_len_sqr(a);
+
+    if (len > f16s_0) {
+        len = fix16Sqrt(len);
+        return (V2f16){
+            .x = fix16Div(a->x, len),
+            .y = fix16Div(a->y, len),
+        };
+    }
+
+    return *a;
+}
+
 V2f16 v2_perp(const V2f16 *const a) {
     return (V2f16){ .x = -a->y, .y =  a->x };
 }

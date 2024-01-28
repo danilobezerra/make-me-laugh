@@ -32,7 +32,7 @@ void Rope_update(Player *const p1, Player *const p2) {
 
     if (rope_len >= ROPE_MAX_LIMIT) {
         V2f16 rope_center = v2_scale(&rope_vec, FIX16(0.5));
-        V2f16 rope_center_dir = v2_norm(&rope_center);
+        V2f16 rope_center_dir = v2_norm_with_sqrt(&rope_center);
         const f16 player_scaled_speed = fix16Mul(PLAYER_SPEED, ROPE_FORCE);
 
         V2f16 delta = v2_scale(&rope_center_dir, player_scaled_speed);

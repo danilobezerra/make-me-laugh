@@ -13,6 +13,7 @@ V2f16 v2_lerp(const V2f16 *a, const V2f16 *b, f16 t);
 f16 v2_len_sqr(const V2f16 *a);
 f16 v2_len(const V2f16 *a);
 V2f16 v2_norm(const V2f16 *a);
+V2f16 v2_norm_with_sqrt(const V2f16 *a);
 V2f16 v2_perp(const V2f16 *a);
 V2f16 v2_neg(const V2f16 *a);
 

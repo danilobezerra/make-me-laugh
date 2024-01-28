@@ -46,7 +46,9 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          path: main/out/
+          path: |
+            ./out.bin
+            ./symbol.txt
           if-no-files-found: error
 
   deploy:
@@ -56,6 +58,8 @@ jobs:
       url: ${{ vars.ITCH_URL }}
     runs-on: ubuntu-latest
     needs: build
+    strategy:
+      fail-fast: true
 
     steps:
       - name: Download Artifact

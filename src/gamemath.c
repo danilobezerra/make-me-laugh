@@ -13,6 +13,20 @@ const f16 f16s_32 = FIX16(32.0);
 const V2f16 screen_clamp_min = { .x = FIX16(10.0), .y = FIX16(10.0)};
 const V2f16 screen_clamp_max = { .x = FIX16(300.0), .y = FIX16(220.0)};
 
+V2f32 v2_convert32(const V2f16 *const a) {
+    return (V2f32){
+        .x = fix16ToFix32(a->x),
+        .y = fix16ToFix32(a->y),
+    };
+}
+
+V2f16 v2_convert16(const V2f32 *const a) {
+    return (V2f16){
+        .x = fix32ToFix16(a->x),
+        .y = fix32ToFix16(a->y),
+    };
+}
+
 V2f16 v2_add(const V2f16 *const a, const V2f16 *const b) {
     return (V2f16){
         .x = a->x + b->x,
@@ -27,8 +41,19 @@ V2f16 v2_sub(const V2f16 *const a, const V2f16 *const b) {
     };
 }
 
+V2f32 v2_sub32(const V2f32 *const a, const V2f32 *const b) {
+    return (V2f32){
+        .x = a->x - b->x,
+        .y = a->y - b->y,
+    };
+}
+
 f16 v2_cross(const V2f16 *const a, const V2f16 *const b) {
     return fix16Mul(a->x, b->y) - fix16Mul(a->y, b->x);
+}
+
+f32 v2_cross32(const V2f32 *const a, const V2f32 *const b) {
+    return fix32Mul(a->x, b->y) - fix32Mul(a->y, b->x);
 }
 
 f16 v2_dot(const V2f16 *const a, const V2f16 *const b) {
@@ -39,6 +64,13 @@ V2f16 v2_scale(const V2f16 *const a, const f16 s) {
     return (V2f16){
         .x = fix16Mul(a->x, s),
         .y = fix16Mul(a->y, s),
+    };
+}
+
+V2f32 v2_scale32(const V2f32 *const a, const f32 s) {
+    return (V2f32){
+        .x = fix32Mul(a->x, s),
+        .y = fix32Mul(a->y, s),
     };
 }
 
@@ -57,6 +89,11 @@ f16 v2_len(const V2f16 *const a) {
     return intToFix16(l);
 }
 
+f32 v2_len32(const V2f32 *const a) {
+    u32 l = getApproximatedDistance(fix32ToInt(a->x), fix32ToInt(a->y));
+    return intToFix32(l);
+}
+
 V2f16 v2_norm(const V2f16 *const a) {
     f16 len = v2_len(a);
 
@@ -64,6 +101,19 @@ V2f16 v2_norm(const V2f16 *const a) {
         return (V2f16){
             .x = fix16Div(a->x, len),
             .y = fix16Div(a->y, len),
+        };
+    }
+
+    return *a;
+}
+
+V2f32 v2_norm32(const V2f32 *const a) {
+    f16 len = v2_len32(a);
+
+    if (len > f16s_0) {
+        return (V2f32){
+            .x = fix32Div(a->x, len),
+            .y = fix32Div(a->y, len),
         };
     }
 

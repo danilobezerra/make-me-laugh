@@ -72,7 +72,7 @@ void Game_update(Game *game) {
 
                 game->current_state = STATE_GAMEPLAY;
 
-                game->ball = Ball_init((V2f16) { .x = FIX16(16.0), .y = FIX16(16.0) });
+                game->ball = Ball_init((V2f16) { .x = FIX16(48.0), .y = FIX16(16.0) });
                 game->players[0] = Player_init(0, (V2f16) { .x = FIX16(20.0), .y = FIX16(28.0) });
                 game->players[1] = Player_init(1, (V2f16) { .x = FIX16(40.0), .y = FIX16(48.0) });
                 game->rope = Rope_init((V2f16) { .x = FIX16(6.0), .y = FIX16(6.0) });

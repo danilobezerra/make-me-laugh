@@ -1,4 +1,6 @@
 #include "ball.h"
+#include "resources.h"
+#include "global.h"
 #include "entity.h"
 #include "gamemath.h"
 #include "intersection.h"
@@ -7,9 +9,13 @@
 static const f16 BALL_MAX_YSPEED = FIX16(32.0);
 
 Ball Ball_init(V2f16 const pos) {
+    Sprite *sprite = SPR_addSprite(&ball_sprite, pos.x, pos.y, TILE_ATTR(BALL_PALETTE, FALSE, FALSE, FALSE));
+    PAL_setPalette(BALL_PALETTE, ball_sprite.palette->data, DMA);
+
     return (Ball) {
+        .sprite = sprite,
         .position = pos,
-        .velocity = { .x = f16s_0, .y = f16s_0},
+        .velocity = { .x = f16s_0, .y = f16s_0 },
     };
 }
 
@@ -83,10 +89,5 @@ bool Ball_update(Ball *const ball, const V2f16 *const p1, const V2f16 *const p2)
 }
 
 void Ball_draw(const Ball *const ball) {
-    const Box ball_bb = Entity_bounding_box(&ball->position, (V2u16){ .x = 8, .y = 8 });
-    // kprintf("ball draw pos %hd %hd", ball_bb.x, ball_bb.y);
-    // Entity_draw(
-    //     &ball_bb,
-    //     RGB24_TO_VDPCOLOR(0xFFFF00) // yellow
-    // );
+    Entity_draw(&ball->position, ball->sprite);
 }

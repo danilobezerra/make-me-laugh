@@ -7,11 +7,11 @@
 const f16 PLAYER_SPEED = FIX16(0.04);
 
 Player Player_init(u8 player_id, V2f16 pos) {
-    Sprite *playerSprite = SPR_addSprite(&player_sprite, pos.x, pos.y, TILE_ATTR(PLAYER_PALETTE, FALSE, FALSE, FALSE));
+    Sprite *sprite = SPR_addSprite(&player_sprite, pos.x, pos.y, TILE_ATTR(PLAYER_PALETTE, FALSE, FALSE, FALSE));
     PAL_setPalette(PLAYER_PALETTE, player_sprite.palette->data, DMA);
 
     return (Player) {
-        .sprite = playerSprite,
+        .sprite = sprite,
         .position = pos,
         .velocity = { .x = f16s_0, .y = f16s_0 },
         .entity_id = player_id,
@@ -79,9 +79,5 @@ V2f16 Player_get_center(const Player *const player) {
 }
 
 void Player_draw(const Player *const player) {
-    const Box player_bb = Entity_bounding_box(&player->position, (V2u16){ .x = 1, .y = 1 });
-    // kprintf("player draw pos %hd %hd", player_bb.x, player_bb.y);
-
-    SPR_setPosition(player->sprite, player_bb.x, player_bb.y);
-    Entity_draw(&player_bb, player->entity_id == 0 ? RGB24_TO_VDPCOLOR(0xFF0000) : RGB24_TO_VDPCOLOR(0x0000FF));
+    Entity_draw(&player->position, player->sprite);
 }

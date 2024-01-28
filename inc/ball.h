@@ -4,6 +4,7 @@
 #include <genesis.h>
 
 typedef struct {
+    Sprite *sprite;
     V2f16 position;
     V2f16 velocity;
 } Ball;

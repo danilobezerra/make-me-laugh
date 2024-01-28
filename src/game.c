@@ -62,6 +62,8 @@ void Game_update(Game *game) {
             p0_center = Player_get_center(&game->players[0]);
             p1_center = Player_get_center(&game->players[1]);
 
+            Rope_update(&game->players[0], &game->players[1]);
+
             // kprintf("-- BALL --");
             Ball_update(&game->ball, &p0_center, &p1_center);
 

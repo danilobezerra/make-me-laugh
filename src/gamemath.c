@@ -53,7 +53,8 @@ f16 v2_len_sqr(const V2f16 *const a) {
 }
 
 f16 v2_len(const V2f16 *const a) {
-    return fix16Sqrt(v2_len_sqr(a));
+    u32 l = getApproximatedDistance(fix16ToInt(a->x), fix16ToInt(a->y));
+    return intToFix16(l);
 }
 
 V2f16 v2_norm(const V2f16 *const a) {

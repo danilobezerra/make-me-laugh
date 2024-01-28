@@ -1,11 +1,12 @@
 #include "rope.h"
+#include "entity.h"
 #include "resources.h"
 #include "gamemath.h"
 #include "global.h"
 #include "maths.h"
-#include "player.h"
 
-static f16 ROPE_MAX_LIMIT = FIX16(64.0);
+static f16 ROPE_MAX_LIMIT = FIX16(80.0);
+static f16 ROPE_FORCE = FIX16(0.5);
 
 Rope Rope_init(V2f16 pos) {
     Rope rope;
@@ -22,13 +23,19 @@ void Rope_update(Player *const p1, Player *const p2) {
 
     // TODO: possible optimization: use v2_len_sqr
     const f16 rope_len = v2_len(&rope_vec);
+    kprintf("len: %hd",
+        fix16ToInt(rope_len)
+    );
+    // kprintf("len: %hd.%hd",
+    //     fix16ToInt(fix16Int(rope_len)), fix16ToInt(fix16Mul(fix16Frac(rope_len), FIX16(100.0)))
+    // );
 
     if (rope_len >= ROPE_MAX_LIMIT) {
-        V2f16 rope_center = v2_lerp(&p2->position, &p1->position, FIX16(0.5));
+        V2f16 rope_center = v2_scale(&rope_vec, FIX16(0.5));
         V2f16 rope_center_dir = v2_norm(&rope_center);
-        const f16 player_double_speed = fix16Mul(PLAYER_SPEED, f16s_2);
+        const f16 player_scaled_speed = fix16Mul(PLAYER_SPEED, ROPE_FORCE);
 
-        V2f16 delta = v2_scale(&rope_center_dir, player_double_speed);
+        V2f16 delta = v2_scale(&rope_center_dir, player_scaled_speed);
         p1->velocity = v2_add(&p1->velocity, &delta);
 
         delta = v2_neg(&delta);

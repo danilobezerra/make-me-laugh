@@ -13,7 +13,10 @@ typedef enum {
 
 typedef struct {
     bool is_running;
+
     GameState current_state;
+    bool is_game_over;
+    u16 score;
 
     Player players[PLAYER_COUNT];
     Rope rope;

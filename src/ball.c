@@ -6,7 +6,7 @@
 #include "intersection.h"
 #include "maths.h"
 
-static const f16 BALL_MAX_YSPEED = FIX16(32.0);
+static const f16 BALL_MAX_YSPEED = FIX16(0.8);
 
 Ball Ball_init(V2f16 const pos) {
     Sprite *sprite = SPR_addSprite(&ball_sprite, pos.x, pos.y, TILE_ATTR(BALL_PALETTE, FALSE, FALSE, FALSE));
@@ -20,7 +20,7 @@ Ball Ball_init(V2f16 const pos) {
 }
 
 void Ball_apply_gravity(Ball *const ball) {
-    Entity_apply_gravity(&ball->velocity, FIX16(0.5), BALL_MAX_YSPEED);
+    Entity_apply_gravity(&ball->velocity, FIX16(0.05), BALL_MAX_YSPEED);
 }
 
 bool Ball_boundaries(Ball *const ball) {
@@ -37,12 +37,12 @@ bool Ball_boundaries(Ball *const ball) {
     }
     else if (ball->position.y >= screen_clamp_max.y) {
         // TODO: go to middle x
-        ball->position.y = screen_clamp_min.y;
+        ball->position.y = screen_clamp_min.y + f16s_8;
         ball->velocity.y = f16s_0;
         touched_floor = TRUE;
     }
     if (ball->position.x <= screen_clamp_min.x || ball->position.x >= screen_clamp_max.x) {
-        ball->velocity.x = -ball->velocity.x;
+        ball->velocity.x = fix16Mul(ball->velocity.x, -(FIX16(0.5)));
     }
 
     return touched_floor;

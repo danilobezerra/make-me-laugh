@@ -58,10 +58,9 @@ f16 v2_len(const V2f16 *const a) {
 }
 
 V2f16 v2_norm(const V2f16 *const a) {
-    f16 len = v2_len_sqr(a);
+    f16 len = v2_len(a);
 
     if (len > f16s_0) {
-        len = fix16Sqrt(len);
         return (V2f16){
             .x = fix16Div(a->x, len),
             .y = fix16Div(a->y, len),

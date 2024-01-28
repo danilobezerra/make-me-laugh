@@ -23,13 +23,27 @@ void Game_setup(Game *game) {
     PAL_setColors(0, palette_black, 64, DMA);
     user_index = TILE_USER_INDEX;
 
-    //game->current_state = STATE_SPLASH;
-    game->current_state = STATE_GAMEPLAY;
+    VDP_drawImageEx(BG_B, &splash, TILE_ATTR_FULL(PAL0, FALSE, FALSE, FALSE, user_index), 0, 0, FALSE, TRUE);
+    user_index += splash.tileset->numTile;
 
-    game->ball = Ball_init((V2f16) { .x = FIX16(6.0), .y = FIX16(6.0) });
-    game->players[0] = Player_init(0, (V2f16) { .x = FIX16(2.5), .y = FIX16(5.0) });
-    game->players[1] = Player_init(1, (V2f16) { .x = FIX16(4.5), .y = FIX16(5.0) });
-    game->rope = Rope_init((V2f16) { .x = FIX16(6.0), .y = FIX16(6.0) });
+    memcpy(&main_palette[0], splash.palette->data, 32);
+
+    PAL_fadeIn(0, 63, main_palette, 30, FALSE);
+    waitTick(TICKPERSECOND * 3);
+    PAL_fadeOutAll(30, FALSE);
+
+    game->current_state = STATE_MAIN_MENU;
+
+    VDP_clearPlane(BG_B, TRUE);
+    DMA_waitCompletion();
+
+    waitTick(TICKPERSECOND);
+
+    VDP_drawText("Press START button", 11, 15);
+    VDP_drawText(" GGJ 2024 - Baixada Santista ", 5, 23);
+    VDP_drawText("Programming by Danilo & Andre", 5, 25);
+
+    PAL_fadeIn(0, 63, main_palette, 60, FALSE);
 }
 
 void Game_run(Game *game) {
@@ -45,17 +59,30 @@ void Game_run(Game *game) {
 }
 
 void Game_update(Game *game) {
-    // kprintf(":: GAME UPDATE ::");
     switch (game->current_state) {
-        case STATE_SPLASH:
-
-
-            break;
         case STATE_MAIN_MENU:
+            u16 value = JOY_readJoypad(JOY_1);
+
+            if (value & BUTTON_START) {
+                VDP_clearPlane(BG_A, TRUE);
+                DMA_waitCompletion();
+
+                VDP_clearPlane(BG_B, TRUE);
+                DMA_waitCompletion();
+
+                game->current_state = STATE_GAMEPLAY;
+
+                game->ball = Ball_init((V2f16) { .x = FIX16(6.0), .y = FIX16(6.0) });
+                game->players[0] = Player_init(0, (V2f16) { .x = FIX16(2.5), .y = FIX16(5.0) });
+                game->players[1] = Player_init(1, (V2f16) { .x = FIX16(4.5), .y = FIX16(5.0) });
+                game->rope = Rope_init((V2f16) { .x = FIX16(6.0), .y = FIX16(6.0) });
+
+                //XGM_startPlay(song);
+            }
+
             break;
         case STATE_GAMEPLAY:
             for (int i = 0; i < PLAYER_COUNT; ++i) {
-                // kprintf("-- PLAYER %d --", i);
                 Player_update(&game->players[i]);
             }
 
@@ -72,27 +99,7 @@ void Game_update(Game *game) {
 }
 
 void Game_draw(Game *game) {
-    // kprintf(":: GAME DRAW ::");
-
-    VDP_clearPlane(BG_A, TRUE);
-    DMA_waitCompletion();
-
-    VDP_clearPlane(BG_B, TRUE);
-    DMA_waitCompletion();
-
     switch (game->current_state) {
-        case STATE_SPLASH:
-            VDP_drawImageEx(BG_B, &splash, TILE_ATTR_FULL(PAL0, FALSE, FALSE, FALSE, user_index), 0, 0, FALSE, TRUE);
-            user_index += splash.tileset->numTile;
-
-            memcpy(&main_palette[0], splash.palette->data, 32);
-
-            PAL_fadeIn(0, 63, main_palette, 30, FALSE);
-            waitTick(TICKPERSECOND * 3);
-            PAL_fadeOutAll(30, FALSE);
-
-            game->current_state = STATE_GAMEPLAY;
-            break;
         case STATE_MAIN_MENU:
             break;
         case STATE_GAMEPLAY:
@@ -103,7 +110,6 @@ void Game_draw(Game *game) {
 
             // kprintf("-- ROPE -- ");
             Rope_draw(&game->rope, &p0_center, &p1_center);
-            // kprintf("-- BALL -- ");
             Ball_draw(&game->ball);
 
             break;

@@ -8,7 +8,7 @@
 #include "ball.h"
 
 typedef enum {
-    STATE_SPLASH, STATE_MAIN_MENU, STATE_GAMEPLAY
+    STATE_MAIN_MENU, STATE_GAMEPLAY
 } GameState;
 
 typedef struct {

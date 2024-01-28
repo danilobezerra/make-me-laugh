@@ -1,14 +1,10 @@
-#include <genesis.h>
-
-bool isRunning = TRUE;
+#include "game.h"
 
 int main() {
-    VDP_drawText("Hello World!", 14, 12);
+    Game game;
 
-    while (isRunning) {
-        SYS_doVBlankProcess();
-
-    }
+    Game_init(&game);
+    Game_run(&game);
 
     return 0;
 }

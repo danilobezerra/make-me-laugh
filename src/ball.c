@@ -24,7 +24,7 @@ void Ball_apply_gravity(Ball *const ball) {
 }
 
 bool Ball_boundaries(Ball *const ball) {
-    bool touched_floor = false;
+    bool touched_floor = FALSE;
 
     Entity_clamp_pos(
         &ball->position,
@@ -39,7 +39,7 @@ bool Ball_boundaries(Ball *const ball) {
         // TODO: go to middle x
         ball->position.y = screen_clamp_min.y;
         ball->velocity.y = f16s_0;
-        touched_floor = true;
+        touched_floor = TRUE;
     }
     if (ball->position.x <= screen_clamp_min.x || ball->position.x >= screen_clamp_max.x) {
         ball->velocity.x = -ball->velocity.x;
@@ -53,7 +53,7 @@ bool Ball_update(Ball *const ball, const V2f16 *const p1, const V2f16 *const p2)
 
     if (Ball_boundaries(ball)) {
         kprintf("PERDEU!!");
-        return true;
+        return TRUE;
     }
 
     V2f16 bb_size = { .x = f16s_4, .y = f16s_4 };
@@ -85,7 +85,7 @@ bool Ball_update(Ball *const ball, const V2f16 *const p1, const V2f16 *const p2)
     //     fix16ToInt(fix16Int(ball->velocity.y)), fix16ToInt(fix16Mul(fix16Frac(ball->velocity.y), FIX16(100.0)))
     // );
 
-    return false;
+    return FALSE;
 }
 
 void Ball_draw(const Ball *const ball) {

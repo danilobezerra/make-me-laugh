@@ -24,8 +24,8 @@ void Ball_apply_gravity(Ball *const ball) {
     Entity_apply_gravity(&ball->velocity, FIX16(0.05), BALL_MAX_YSPEED);
 }
 
-bool Ball_boundaries(Ball *const ball) {
-    bool touched_floor = FALSE;
+u8 Ball_boundaries(Ball *const ball) {
+    u8 touched_floor = 0;
 
     Entity_clamp_pos(
         &ball->position,
@@ -40,7 +40,7 @@ bool Ball_boundaries(Ball *const ball) {
         // TODO: go to middle x
         ball->position.y = screen_clamp_min.y + f16s_8;
         ball->velocity.y = f16s_0;
-        touched_floor = TRUE;
+        touched_floor = BALL_HIT_FLOOR;
     }
     if (ball->position.x <= screen_clamp_min.x || ball->position.x >= screen_clamp_max.x) {
         ball->velocity.x = fix16Mul(ball->velocity.x, -(FIX16(0.5)));
@@ -49,13 +49,15 @@ bool Ball_boundaries(Ball *const ball) {
     return touched_floor;
 }
 
-bool Ball_update(Ball *const ball, const V2f16 *const p1, const V2f16 *const p2) {
+u8 Ball_update(Ball *const ball, const V2f16 *const p1, const V2f16 *const p2) {
     Ball_apply_gravity(ball);
 
     if (Ball_boundaries(ball)) {
         kprintf("PERDEU!!");
-        return TRUE;
+        return BALL_HIT_FLOOR;
     }
+
+    u8 result = 0;
 
     V2f32 bb_pos = v2_convert32(&ball->position);
     V2f32 p1_32 = v2_convert32(p1);
@@ -103,9 +105,11 @@ bool Ball_update(Ball *const ball, const V2f16 *const p1, const V2f16 *const p2)
             );
 
             V2f32 rope_dir32 = v2_norm32(&rope_perp32);
-            kprintf("rope dir 32: %ld.%ld %ld.%ld",
+            f32 rope_dir32_len = v2_len32(&rope_dir32);
+            kprintf("rope dir 32 & len: %ld.%ld %ld.%ld -> %ld.%ld",
                 fix32ToInt(fix32Int(rope_dir32.x)), fix32ToInt(fix32Mul(fix32Frac(rope_dir32.x), FIX32(100.0))),
-                fix32ToInt(fix32Int(rope_dir32.y)), fix32ToInt(fix32Mul(fix32Frac(rope_dir32.y), FIX32(100.0)))
+                fix32ToInt(fix32Int(rope_dir32.y)), fix32ToInt(fix32Mul(fix32Frac(rope_dir32.y), FIX32(100.0))),
+                fix32ToInt(fix32Int(rope_dir32_len)), fix32ToInt(fix32Mul(fix32Frac(rope_dir32_len), FIX32(100.0)))
             );
 
             V2f32 vel32 = v2_scale32(&rope_dir32, fix16ToFix32(v2_len(&ball->velocity)));
@@ -120,9 +124,9 @@ bool Ball_update(Ball *const ball, const V2f16 *const p1, const V2f16 *const p2)
                 fix16ToInt(fix16Int(ball->velocity.y)), fix16ToInt(fix16Mul(fix16Frac(ball->velocity.y), FIX16(100.0)))
             );
 
-
             // ball->velocity = v2_scale(&rope_perp, v2_len(&ball->velocity));
             kprintf("ball reflected!");
+            result = BALL_HIT_ROPE;
             // waitTick(TICKPERSECOND * 4);
         }
     }
@@ -136,7 +140,7 @@ bool Ball_update(Ball *const ball, const V2f16 *const p1, const V2f16 *const p2)
     //     fix16ToInt(fix16Int(ball->velocity.y)), fix16ToInt(fix16Mul(fix16Frac(ball->velocity.y), FIX16(100.0)))
     // );
 
-    return FALSE;
+    return result;
 }
 
 void Ball_draw(const Ball *const ball) {

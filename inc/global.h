@@ -8,4 +8,7 @@
 #define BALL_PALETTE PAL2
 #define ROPE_PALETTE PAL3
 
+#define BALL_HIT_FLOOR (1)
+#define BALL_HIT_ROPE (2)
+
 #endif //MAKE_ME_LAUGH_GLOBAL_H

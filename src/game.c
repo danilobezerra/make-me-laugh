@@ -82,7 +82,7 @@ void Game_update(Game *game) {
                 game->players[1] = Player_init(1, (V2f16) { .x = FIX16(40.0), .y = FIX16(48.0) });
                 game->rope = Rope_init((V2f16) { .x = FIX16(6.0), .y = FIX16(6.0) });
 
-                XGM_startPlay(song);
+                XGM_startPlay(music);
             }
 
             break;

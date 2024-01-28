@@ -14,6 +14,8 @@ char str_score[4] = "0";
 V2f16 p0_center;
 V2f16 p1_center;
 
+Map* bga;
+
 void Game_init(Game *game) {
     JOY_init();
     SPR_init();
@@ -22,7 +24,7 @@ void Game_init(Game *game) {
 }
 
 void Game_setup(Game *game) {
-    PAL_setColors(0, palette_black, 64, DMA);
+    PAL_setColors(PAL0, palette_black, 64, DMA);
     user_index = TILE_USER_INDEX;
 
     VDP_drawImageEx(BG_B, &splash, TILE_ATTR_FULL(PAL0, FALSE, FALSE, FALSE, user_index), 0, 0, FALSE, TRUE);
@@ -35,6 +37,8 @@ void Game_setup(Game *game) {
     PAL_fadeOutAll(30, FALSE);
 
     game->current_state = STATE_MAIN_MENU;
+
+
 
     VDP_clearPlane(BG_B, TRUE);
     DMA_waitCompletion();
@@ -78,8 +82,8 @@ void Game_update(Game *game) {
                 game->score = 0;
 
                 game->ball = Ball_init((V2f16) { .x = FIX16(48.0), .y = FIX16(16.0) });
-                game->players[0] = Player_init(0, (V2f16) { .x = FIX16(20.0), .y = FIX16(28.0) });
-                game->players[1] = Player_init(1, (V2f16) { .x = FIX16(40.0), .y = FIX16(48.0) });
+                game->players[0] = Player_init(0, (V2f16) { .x = FIX16(100.0), .y = FIX16(100.0) });
+                game->players[1] = Player_init(1, (V2f16) { .x = FIX16(200.0), .y = FIX16(100.0) });
                 game->rope = Rope_init((V2f16) { .x = FIX16(6.0), .y = FIX16(6.0) });
 
                 XGM_startPlay(music);

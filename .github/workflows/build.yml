@@ -61,14 +61,14 @@ jobs:
       - name: Download Artifact
         uses: actions/download-artifact@v4
 
-      - name: Display structure of downloaded files
-        run: ls -R
+      - name: Rename rom.bin
+        run: mv artifact/rom.bin artifact/${{ vars.ITCH_GAME_ID }}.bin
 
       - name: Deploy to Itch
         uses: KikimoraGames/itch-publish@v0.0.3
         with:
           butlerApiKey: ${{ secrets.BUTLER_API_KEY }}
-          gameData: artifact/rom.bin
+          gameData: artifact/${{ vars.ITCH_GAME_ID }}.bin
           itchUsername: ${{ vars.ITCH_USERNAME }}
           itchGameId: ${{ vars.ITCH_GAME_ID }}
           buildChannel: ${{ github.ref_name }}
